@@ -268,7 +268,7 @@ public class ProductMgr {
 
 		for (ProductAttribute attribute : this.attributes) {
 
-			if (attribute.getName() == name)
+			if (attribute.getName().compareTo(name)==0)
 				return attribute.getValues();
 		}
 		

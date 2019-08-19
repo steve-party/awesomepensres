@@ -379,7 +379,7 @@ public class ProductmetaMainGui {
 		
 		AttributeList = new JList();
 		
-		for (int i=1; i<=40; i++) {
+		for (int i=1; i<=Product.MAX_ATTRIBUTE_AMOUNT; i++) {
 			
 			AttributeControlSet aSet = new AttributeControlSet();
 			

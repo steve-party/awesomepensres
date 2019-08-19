@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -22,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.regex.Pattern;
 
 import javax.swing.JTextArea;
@@ -64,9 +66,35 @@ public class ProductMgr {
 		
 	}
 	
-	public void createMetaCsv(String productFolderPath, Product product) {
-		String csvFilePath = productFolderPath + File.separator +"meta.csv";
+	private List<String> createCsvHeader(){
+		header = new ArrayList<String>();
+		header.add("Sku");
+		header.add("Name");
+		header.add("Published");
+		header.add("Short description");
+		header.add("Description");
+		header.add("Stock");
+		header.add("Weight (kg)");
+		header.add("Length (cm)");
+		header.add("Width (cm)");
+		header.add("Height (cm)");
+		header.add("Sale price");
+		header.add("Regular price");
+		header.add("Categories");
+		header.add("Tags");
+		header.add("Images");
+		header.add("Meta: _wpm_gtin_code");
 		
+		
+		for(int i = 0; i<Product.MAX_ATTRIBUTE_AMOUNT; i++) {
+			header.add("Attribute " + Integer.toString(i+1) + " name");
+			header.add("Attribute " + Integer.toString(i+1) + " value(s)");
+		}
+		
+		return header;
+	}
+	
+	private List<String> createCsvHeader(Product product){
 		header = new ArrayList<String>();
 		header.add("Sku");
 		header.add("Name");
@@ -90,6 +118,14 @@ public class ProductMgr {
 			header.add("Attribute " + Integer.toString(i+1) + " name");
 			header.add("Attribute " + Integer.toString(i+1) + " value(s)");
 		}
+		
+		return header;
+	}
+	
+	public void createMetaCsv(String productFolderPath, Product product) {
+		String csvFilePath = productFolderPath + File.separator +"meta.csv";
+		
+		createCsvHeader(product);
 		
 		List<String> data = new ArrayList<String>();
 		data.add(product.getSku());
@@ -288,6 +324,21 @@ public class ProductMgr {
 		return str.replaceAll("Catalog"+Pattern.quote(File.separator), "").replaceAll(Pattern.quote(File.separator), " > ").replaceAll("&", "&amp;");	
 	}
 	
+	private void populateImagePath(String[] data) {
+		String str = data[14];
+		Date date = new Date(); // your date
+		// Choose time zone in which you want to interpret your Date
+		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
+		cal.setTime(date);
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH);
+		String urlPrefix = "https://awesomepens.co.uk/wp-content/uploads/" + year + "/" + String.format("%02d", month + 1) + "/";
+		
+		str = urlPrefix + str;
+		str = str.replaceAll(", ", ", " + urlPrefix);
+		data[14] = str;
+	}
+	
 	public void BatchProcessProducts(List<File> productFolders, String outputFolderPath) {
 		
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -297,7 +348,8 @@ public class ProductMgr {
 		File imageFolder = new File(folder.getPath() + File.separator + "jpeg");
 		imageFolder.mkdir();
 		String outputFilePath = folder.getPath()+ File.separator +"product_import_"+ timeStamp + ".csv";
-
+		
+		createCsvHeader();
 		
 		try { 
 	        // create FileWriter object with file as parameter 
@@ -314,6 +366,7 @@ public class ProductMgr {
 	        	
 	        	if (item.exists()) {
 		        	String[] data = CsvTools.readFirstRecord(item.getPath());
+		        	populateImagePath(data);
 		        	outputWriter.writeNext(data);
 		        	
 		        	

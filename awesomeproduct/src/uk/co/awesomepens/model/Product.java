@@ -22,6 +22,8 @@ public class Product {
 	private Boolean published;
 	private LinkedHashMap<String, String> attributes;
 	
+	public static final int MAX_ATTRIBUTE_AMOUNT = 40;
+	
 	public String getSku() {
 		return sku;
 	}

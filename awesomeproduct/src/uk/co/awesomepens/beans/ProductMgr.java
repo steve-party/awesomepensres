@@ -267,7 +267,7 @@ public class ProductMgr {
 	
 	public static void renameProductImages(String productDirPath) {
 		String name = getProductNameFromPath(productDirPath);
-		name = name.replaceAll(" ", "-").replaceAll("---", "-");
+		name = name.replaceAll(" ", "-").replaceAll("---", "-").replaceAll("--", "-");
 		File[] files = new File(productDirPath).listFiles();
 		for (File file : files) {
 		    if (file.isFile()) {

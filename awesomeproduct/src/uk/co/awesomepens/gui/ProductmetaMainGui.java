@@ -183,10 +183,22 @@ public class ProductmetaMainGui {
 					txtImages.setText("");
 					txtGtin.setText("");
 					
+					
+					int count = 0;
+					//bug fix otherwise after browse... first attribute ie Brand always add to the last attribute value field.
+					JComboBox firstAttributeBox = new JComboBox();
 					for(AttributeControlSet ac : attributeControlSets) {
-						ac.getAttributeNameBox().setSelectedIndex(-1);
-						ac.getAttributeValueField().setText("");
+						if (count == 0 ) {
+							firstAttributeBox = ac.getAttributeNameBox();
+							
+						}
+						else {
+							ac.getAttributeNameBox().setSelectedIndex(-1);
+							ac.getAttributeValueField().setText("");
+						}
+						count++;
 					}
+					firstAttributeBox.setSelectedItem("Brand");
 					
 					Product product = ProductMgr.loadProductFromCsv(selectPath);
 					if (product == null){

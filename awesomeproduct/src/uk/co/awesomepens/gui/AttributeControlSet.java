@@ -1,6 +1,7 @@
 package uk.co.awesomepens.gui;
 
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -8,6 +9,9 @@ public class AttributeControlSet {
 	private JPanel panel;
 	private JComboBox attributeNameBox;
 	private JTextField attributeValueField;
+
+	private JLabel attributeName;
+	private JLabel attributeValues;
 	
 	public AttributeControlSet() {
 		
@@ -37,6 +41,17 @@ public class AttributeControlSet {
 		this.attributeValueField = attributeValueField;
 	}
 	
-	
+	public JLabel getAttributeName() {
+		return attributeName;
+	}
+	public void setAttributeName(JLabel attributeName) {
+		this.attributeName = attributeName;
+	}
+	public JLabel getAttributeValues() {
+		return attributeValues;
+	}
+	public void setAttributeValues(JLabel attributeValues) {
+		this.attributeValues = attributeValues;
+	}
 
 }

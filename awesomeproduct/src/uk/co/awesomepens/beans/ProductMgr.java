@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -59,6 +60,13 @@ public class ProductMgr {
 		attributes = new ArrayList<ProductAttribute>();
 		attributes = InitializeAttributes();
 		
+
+		
+	}
+	
+	public void createMetaCsv(String productFolderPath, Product product) {
+		String csvFilePath = productFolderPath + File.separator +"meta.csv";
+		
 		header = new ArrayList<String>();
 		header.add("Sku");
 		header.add("Name");
@@ -76,12 +84,6 @@ public class ProductMgr {
 		header.add("Tags");
 		header.add("Images");
 		header.add("Meta: _wpm_gtin_code");
-		
-	}
-	
-	public void createMetaCsv(String productFolderPath, Product product) {
-		String csvFilePath = productFolderPath + File.separator +"meta.csv";
-		
 		
 		
 		for(int i = 0; i<product.getAttributes().size(); i++) {
@@ -107,7 +109,7 @@ public class ProductMgr {
 		data.add(product.getImages());
 		data.add(product.getGtin());
 		
-		Hashtable<String, String> attributes = product.getAttributes();
+		LinkedHashMap<String, String> attributes = product.getAttributes();
 		
 		Iterator<Entry<String, String>> it = attributes.entrySet().iterator();
 		
@@ -173,11 +175,11 @@ public class ProductMgr {
 				product.setImages(record[14]);
 				product.setGtin(record[15]);
 				
-				Hashtable<String, String> attributes = new Hashtable<String, String>();
-				attributes.put(record[16], record[17]);
+				LinkedHashMap<String, String> attributes = new LinkedHashMap<String, String>();
+//				attributes.put(record[16], record[17]);
 				
-				if (record.length>18) {
-					for (int i = 18; i < record.length; i+=2) {
+				if (record.length>16) {
+					for (int i = 16; i < record.length; i+=2) {
 						attributes.put(record[i], record[i+1]);
 					}
 				}

@@ -1,6 +1,7 @@
 package uk.co.awesomepens.model;
 
 import java.util.Hashtable;
+import java.util.LinkedHashMap;
 
 public class Product {
 	private String sku;
@@ -19,7 +20,7 @@ public class Product {
 	private double height;
 	private String gtin;
 	private Boolean published;
-	private Hashtable<String, String> attributes;
+	private LinkedHashMap<String, String> attributes;
 	
 	public String getSku() {
 		return sku;
@@ -117,10 +118,10 @@ public class Product {
 	public void setPublished(Boolean published) {
 		this.published = published;
 	}
-	public Hashtable<String, String> getAttributes() {
+	public LinkedHashMap<String, String> getAttributes() {
 		return attributes;
 	}
-	public void setAttributes(Hashtable<String, String> attributes) {
+	public void setAttributes(LinkedHashMap<String, String> attributes) {
 		this.attributes = attributes;
 	}
 

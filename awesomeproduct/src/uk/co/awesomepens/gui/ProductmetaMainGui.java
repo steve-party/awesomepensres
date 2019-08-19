@@ -19,6 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.prefs.Preferences;
@@ -44,6 +45,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JMenu;
 import java.awt.Component;
 import java.awt.Dimension;
+import javax.swing.ScrollPaneConstants;
 
 public class ProductmetaMainGui {
 	
@@ -52,7 +54,8 @@ public class ProductmetaMainGui {
 	private List<ProductAttribute> attributes;
 	private JTextField selectedAttribute;
 	private String selectPath;
-	private List<AttributeControlSet> attributeCtrls;
+//	private List<AttributeControlSet> attributeCtrls;
+	private List<AttributeControlSet> attributeControlSets;
 
 	private JFrame frame;
 	private JTextField textField;
@@ -83,63 +86,8 @@ public class ProductmetaMainGui {
 	private JTextField txtLength;
 	private JLabel lblHeightcm;
 	private JTextField txtHeight;
-	private JLabel lblAttributeName1;
-	private JComboBox comboAttributeName1;
-	private JLabel lblAttributeValues1;
-	private JTextField txtAttributeValue1;
 	private JButton btnMetaCsv;
 	private JButton btnLessAttribute;
-	private JPanel panel_0;
-	private JPanel panel_1;
-	private JLabel lblAttributeName2;
-	private JComboBox comboAttributeName2;
-	private JLabel lblAttributeValues2;
-	private JTextField txtAttributeValue2;
-	private JPanel panel_2;
-	private JLabel lblAttributeName3;
-	private JComboBox comboAttributeName3;
-	private JLabel lblAttributeValues3;
-	private JTextField txtAttributeValue3;
-	private JPanel panel_3;
-	private JLabel lblAttributeName4;
-	private JComboBox comboAttributeName4;
-	private JLabel lblAttributeValues4;
-	private JTextField txtAttributeValue4;
-	private JPanel panel_4;
-	private JLabel lblAttributeName5;
-	private JComboBox comboAttributeName5;
-	private JLabel lblAttributeValues5;
-	private JTextField txtAttributeValue5;
-	private JPanel panel_5;
-	private JLabel lblAttributeName6;
-	private JComboBox comboAttributeName6;
-	private JLabel lblAttributeValues6;
-	private JTextField txtAttributeValue6;
-	private JPanel panel_6;
-	private JLabel lblAttributeName7;
-	private JComboBox comboAttributeName7;
-	private JLabel lblAttributeValues7;
-	private JTextField txtAttributeValue7;
-	private JPanel panel_7;
-	private JLabel lblAttributeName8;
-	private JComboBox comboAttributeName8;
-	private JLabel lblAttributeValues8;
-	private JTextField txtAttributeValue8;
-	private JPanel panel_8;
-	private JLabel lblAttributeName9;
-	private JComboBox comboAttributeName9;
-	private JLabel lblAttributeValues9;
-	private JTextField txtAttributeValue9;
-	private JPanel panel_9;
-	private JLabel lblAttributeName10;
-	private JComboBox comboAttributeName10;
-	private JLabel lblAttributeValues;
-	private JTextField txtAttributeValue10;
-	private JPanel panel_10;
-	private JLabel lblAttributeName11;
-	private JComboBox comboAttributeName11;
-	private JLabel lblAttributeValues11;
-	private JTextField txtAttributeValue11;
 	private JCheckBox checkbxPublished;
 	private JTextArea textAreaShortDescription;
 	private JTextArea textAreaDescription;
@@ -180,7 +128,8 @@ public class ProductmetaMainGui {
 		this.productMgr = new ProductMgr();
 		this.attributes = productMgr.getAttributes();
 		List<String> attributeNames = productMgr.getAttributeNameList(attributes);
-		this.attributeCtrls = new ArrayList<AttributeControlSet>();
+//		this.attributeCtrls = new ArrayList<AttributeControlSet>();
+		this.attributeControlSets = new ArrayList<AttributeControlSet>();
 		
 		frame = new JFrame();
 		frame.setResizable(false);
@@ -199,7 +148,6 @@ public class ProductmetaMainGui {
 		
 		imgPanel = new ImagePanel();
 		imgPanel.setBounds(1185, 6, 220, 220);
-		//imgPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		imgPanel.setBackground(new Color(255,255,255));
 		frame.getContentPane().add(imgPanel);
 			
@@ -242,13 +190,10 @@ public class ProductmetaMainGui {
 					txtTags.setText("");
 					txtImages.setText("");
 					txtGtin.setText("");
-					comboAttributeName1.setSelectedItem("Brand");
-					txtAttributeValue1.setText("");
 					
-					for(AttributeControlSet ac : attributeCtrls) {
+					for(AttributeControlSet ac : attributeControlSets) {
 						ac.getAttributeNameBox().setSelectedIndex(-1);
 						ac.getAttributeValueField().setText("");
-						ac.getPanel().setVisible(false);
 					}
 					
 					Product product = ProductMgr.loadProductFromCsv(selectPath);
@@ -278,10 +223,7 @@ public class ProductmetaMainGui {
 						txtGtin.setText(product.getGtin());
 						
 						Iterator<Entry<String, String>> it = product.getAttributes().entrySet().iterator();
-						Entry<String, String> firstEntry = it.next();
-						comboAttributeName1.setSelectedItem(firstEntry.getKey());
-						txtAttributeValue1.setText(firstEntry.getValue());
-						Iterator<AttributeControlSet> cIt = attributeCtrls.iterator();
+						Iterator<AttributeControlSet> cIt = attributeControlSets.iterator();
 						while (it.hasNext() && cIt.hasNext()) {
 							Entry<String, String> entry = it.next();
 							AttributeControlSet acs = cIt.next();
@@ -289,10 +231,7 @@ public class ProductmetaMainGui {
 							acs.getAttributeValueField().setText(entry.getValue());
 							acs.getPanel().setVisible(true);
 						}
-						
 					}
-					
-					
 
 				} else if (status == JFileChooser.CANCEL_OPTION) {
 					System.out.println("calceled");
@@ -438,510 +377,73 @@ public class ProductmetaMainGui {
 		txtHeight.setBounds(976, 117, 61, 26);
 		frame.getContentPane().add(txtHeight);
 		
+		AttributeList = new JList();
+		
+		for (int i=1; i<=40; i++) {
+			
+			AttributeControlSet aSet = new AttributeControlSet();
+			
+			JLabel AttributeName = new JLabel("Attribute " + i + " name");
+			JLabel AttributeValues = new JLabel("Attribute "+ i +" value(s)");
+			JComboBox AttributeNameBox = new JComboBox(attributeNames.toArray());
+			JTextField AttributeValueField = new JTextField();
+			
+			
+			aSet.setAttributeName(AttributeName);
+			aSet.setAttributeValues(AttributeValues);
+			aSet.setAttributeNameBox(AttributeNameBox);
+			aSet.setAttributeValueField(AttributeValueField);
+			
+			JPanel panel = new JPanel();
+			panel.setLayout(null);
+			AttributeName.setBounds(0, 23, 114, 16);
+			panel.add(AttributeName);
+			AttributeValues.setBounds(0, 54, 130, 16);
+			panel.add(AttributeValues);
+			AttributeNameBox.setBounds(126, 19, 182, 27);
+			AttributeNameBox.setSelectedIndex(-1);
+			AttributeNameBox.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (AttributeNameBox.getSelectedIndex() >-1)
+						AttributeList.setListData(productMgr.getAttributeValuesbyName(AttributeNameBox.getSelectedItem().toString()).toArray());
+					selectedAttribute = AttributeValueField;
+					if (selectedAttribute!=null) {
+						selectedAttribute.setText("");
+					}
+				}
+			});
+			panel.add(AttributeNameBox);
+			AttributeValueField.setBounds(126, 49, 303, 26);
+			
+			panel.add(AttributeValueField);
+			
+			if(i==1) {
+				AttributeNameBox.setSelectedItem("Brand");
+				
+			}
+			aSet.setPanel(panel);
+			
+			attributeControlSets.add(aSet);
+		}
+		
 		JPanel attributePanel = new JPanel();
-//		attributePanel.setBorder(new TitledBorder(null, "Attributes", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-//		attributePanel.setBounds(727, 227, 460, 672);
-		attributePanel.setPreferredSize(new Dimension(450, 3000));
-//		frame.getContentPane().add(attributePanel);
+		attributePanel.setPreferredSize(new Dimension(450, 2610));
 		attributePanel.setLayout(null);
 		
 		JScrollPane sPaneAttributes = new JScrollPane(attributePanel);
+		sPaneAttributes.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		sPaneAttributes.setBounds(727, 227, 460, 672);
 		frame.getContentPane().add(sPaneAttributes);
 		
-		panel_0 = new JPanel();
-		panel_0.setBounds(6, 0, 429, 80);
-		attributePanel.add(panel_0);
-		panel_0.setLayout(null);
-		panel_0.setVisible(true);
+		int count = 0;
+		int height = 65;
+		for (AttributeControlSet aSet : attributeControlSets) {
+			JPanel panel = aSet.getPanel();
+			panel.setBounds(6, height*count, 429, 80);
+			attributePanel.add(panel);
+			count++;
+		}
 		
-		lblAttributeName1 = new JLabel("Attribute 1 name");
-		lblAttributeName1.setBounds(0, 23, 114, 16);
-		panel_0.add(lblAttributeName1);
-		
-		lblAttributeValues1 = new JLabel("Attribute 1 value(s)");
-		lblAttributeValues1.setBounds(0, 54, 130, 16);
-		panel_0.add(lblAttributeValues1);
-		
-		comboAttributeName1 = new JComboBox(attributeNames.toArray());
-		comboAttributeName1.setSelectedItem("Brand");
-		comboAttributeName1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				selectedAttribute = txtAttributeValue1;
-				if (selectedAttribute!=null) {
-					selectedAttribute.setText("");
-				}
-					
-				AttributeList.setListData(productMgr.getAttributeValuesbyName(comboAttributeName1.getSelectedItem().toString()).toArray());
-			}
-		});
-		comboAttributeName1.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				
-			}
-		});
-		comboAttributeName1.setBounds(126, 19, 182, 27);
-		panel_0.add(comboAttributeName1);
-		
-		txtAttributeValue1 = new JTextField();
-		txtAttributeValue1.setBounds(126, 49, 303, 26);
-		panel_0.add(txtAttributeValue1);
-		txtAttributeValue1.setColumns(10);
-		
-		JButton btnMoreAttribute = new JButton("+");
-		btnMoreAttribute.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				switch (attributeCount) {
-				case 1:
-					panel_1.setVisible(true);
-					break;
-				case 2:
-					panel_2.setVisible(true);
-					break;
-				case 3:
-					panel_3.setVisible(true);
-					break;
-				case 4:
-					panel_4.setVisible(true);
-					break;
-				case 5:
-					panel_5.setVisible(true);
-					break;
-				case 6:
-					panel_6.setVisible(true);
-					break;
-				case 7:
-					panel_7.setVisible(true);
-					break;
-				case 8:
-					panel_8.setVisible(true);
-					break;
-				case 9:
-					panel_9.setVisible(true);
-					break;
-				case 10:
-					panel_10.setVisible(true);
-					btnMoreAttribute.setEnabled(false);
-					break;
-
-				default:
-					break;
-				}
-				if (attributeCount<11)
-					attributeCount++;
-				if (attributeCount > 1)
-					btnLessAttribute.setEnabled(true);
-			}
-		});
-		btnMoreAttribute.setBounds(312, 18, 55, 29);
-		panel_0.add(btnMoreAttribute);
-		
-		btnLessAttribute = new JButton("-");
-		btnLessAttribute.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				switch (attributeCount) {
-				case 11:
-					panel_10.setVisible(false);
-					break;
-				case 10:
-					panel_9.setVisible(false);
-					break;
-				case 9:
-					panel_8.setVisible(false);
-					break;
-				case 8:
-					panel_7.setVisible(false);
-					break;
-				case 7: 
-					panel_6.setVisible(false);
-					break;
-				case 6:
-					panel_5.setVisible(false);
-					break;
-				case 5:
-					panel_4.setVisible(false);
-					break;
-				case 4:
-					panel_3.setVisible(false);
-					break;
-				case 3:
-					panel_2.setVisible(false);
-					break;
-				case 2:
-					panel_1.setVisible(false);
-					btnLessAttribute.setEnabled(false);
-					break;
-
-				default:
-					
-					break;
-				}
-				if (attributeCount>1)
-					attributeCount--;
-				if (attributeCount<11)
-					btnMoreAttribute.setEnabled(true);
-			}
-		});
-		btnLessAttribute.setEnabled(false);
-		btnLessAttribute.setBounds(374, 18, 55, 29);
-		panel_0.add(btnLessAttribute);
-		
-
-		
-		panel_1 = new JPanel();
-		panel_1.setBounds(6, 73, 429, 60);
-		attributePanel.add(panel_1);
-		panel_1.setLayout(null);
-		panel_1.setVisible(false);
-		
-		lblAttributeName2 = new JLabel("Attribute 2 name");
-		lblAttributeName2.setBounds(0, 10, 114, 16);
-		panel_1.add(lblAttributeName2);
-		
-		comboAttributeName2 = new JComboBox(attributeNames.toArray());
-		comboAttributeName2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (comboAttributeName2.getSelectedIndex() >-1)
-					AttributeList.setListData(productMgr.getAttributeValuesbyName(comboAttributeName2.getSelectedItem().toString()).toArray());
-				selectedAttribute = txtAttributeValue2;
-				if (selectedAttribute!=null) {
-					selectedAttribute.setText("");
-				}
-				
-			}
-		});
-		comboAttributeName2.setSelectedIndex(-1);
-		comboAttributeName2.setBounds(126, 6, 182, 27);
-		panel_1.add(comboAttributeName2);
-		
-		lblAttributeValues2 = new JLabel("Attribute 2 value(s)");
-		lblAttributeValues2.setBounds(0, 41, 130, 16);
-		panel_1.add(lblAttributeValues2);
-		
-		txtAttributeValue2 = new JTextField();
-		txtAttributeValue2.setColumns(10);
-		txtAttributeValue2.setBounds(126, 36, 303, 26);
-		panel_1.add(txtAttributeValue2);
-		
-		panel_2 = new JPanel();
-		panel_2.setLayout(null);
-		panel_2.setBounds(6, 132, 429, 60);
-		attributePanel.add(panel_2);
-		panel_2.setVisible(false);
-		
-		lblAttributeName3 = new JLabel("Attribute 3 name");
-		lblAttributeName3.setBounds(0, 10, 114, 16);
-		panel_2.add(lblAttributeName3);
-		
-		comboAttributeName3 = new JComboBox(attributeNames.toArray());
-		comboAttributeName3.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (comboAttributeName3.getSelectedIndex() >-1)
-					AttributeList.setListData(productMgr.getAttributeValuesbyName(comboAttributeName3.getSelectedItem().toString()).toArray());
-				selectedAttribute = txtAttributeValue3;
-				if (selectedAttribute!=null) {
-					selectedAttribute.setText("");
-				}
-			}
-		});
-		comboAttributeName3.setSelectedIndex(-1);
-		comboAttributeName3.setBounds(126, 6, 182, 27);
-		panel_2.add(comboAttributeName3);
-		
-		lblAttributeValues3 = new JLabel("Attribute 3 value(s)");
-		lblAttributeValues3.setBounds(0, 41, 130, 16);
-		panel_2.add(lblAttributeValues3);
-		
-		txtAttributeValue3 = new JTextField();
-		txtAttributeValue3.setColumns(10);
-		txtAttributeValue3.setBounds(126, 36, 303, 26);
-		panel_2.add(txtAttributeValue3);
-		
-		panel_3 = new JPanel();
-		panel_3.setLayout(null);
-		panel_3.setBounds(6, 191, 429, 60);
-		attributePanel.add(panel_3);
-		panel_3.setVisible(false);
-		
-		lblAttributeName4 = new JLabel("Attribute 4 name");
-		lblAttributeName4.setBounds(0, 10, 114, 16);
-		panel_3.add(lblAttributeName4);
-		
-		comboAttributeName4 = new JComboBox(attributeNames.toArray());
-		comboAttributeName4.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (comboAttributeName4.getSelectedIndex() >-1)
-					AttributeList.setListData(productMgr.getAttributeValuesbyName(comboAttributeName4.getSelectedItem().toString()).toArray());
-				selectedAttribute = txtAttributeValue4;
-				if (selectedAttribute!=null) {
-					selectedAttribute.setText("");
-				}
-			}
-		});
-		comboAttributeName4.setSelectedIndex(-1);
-		comboAttributeName4.setBounds(126, 6, 182, 27);
-		panel_3.add(comboAttributeName4);
-		
-		lblAttributeValues4 = new JLabel("Attribute 4 value(s)");
-		lblAttributeValues4.setBounds(0, 41, 130, 16);
-		panel_3.add(lblAttributeValues4);
-		
-		txtAttributeValue4 = new JTextField();
-		txtAttributeValue4.setColumns(10);
-		txtAttributeValue4.setBounds(126, 36, 303, 26);
-		panel_3.add(txtAttributeValue4);
-		
-		panel_4 = new JPanel();
-		panel_4.setLayout(null);
-		panel_4.setBounds(6, 250, 429, 60);
-		attributePanel.add(panel_4);
-		panel_4.setVisible(false);
-		
-		lblAttributeName5 = new JLabel("Attribute 5 name");
-		lblAttributeName5.setBounds(0, 10, 114, 16);
-		panel_4.add(lblAttributeName5);
-		
-		comboAttributeName5 = new JComboBox(attributeNames.toArray());
-		comboAttributeName5.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (comboAttributeName5.getSelectedIndex() >-1)
-					AttributeList.setListData(productMgr.getAttributeValuesbyName(comboAttributeName5.getSelectedItem().toString()).toArray());
-				selectedAttribute = txtAttributeValue5;
-				if (selectedAttribute!=null) {
-					selectedAttribute.setText("");
-				}
-			}
-		});
-		comboAttributeName5.setSelectedIndex(-1);
-		comboAttributeName5.setBounds(126, 6, 182, 27);
-		panel_4.add(comboAttributeName5);
-		
-		lblAttributeValues5 = new JLabel("Attribute 5 value(s)");
-		lblAttributeValues5.setBounds(0, 41, 130, 16);
-		panel_4.add(lblAttributeValues5);
-		
-		txtAttributeValue5 = new JTextField();
-		txtAttributeValue5.setColumns(10);
-		txtAttributeValue5.setBounds(126, 36, 303, 26);
-		panel_4.add(txtAttributeValue5);
-		
-		panel_5 = new JPanel();
-		panel_5.setLayout(null);
-		panel_5.setBounds(6, 309, 429, 60);
-		attributePanel.add(panel_5);
-		panel_5.setVisible(false);
-		
-		lblAttributeName6 = new JLabel("Attribute 6 name");
-		lblAttributeName6.setBounds(0, 10, 114, 16);
-		panel_5.add(lblAttributeName6);
-		
-		comboAttributeName6 = new JComboBox(attributeNames.toArray());
-		comboAttributeName6.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (comboAttributeName6.getSelectedIndex() >-1)
-					AttributeList.setListData(productMgr.getAttributeValuesbyName(comboAttributeName6.getSelectedItem().toString()).toArray());
-				selectedAttribute = txtAttributeValue6;
-				if (selectedAttribute!=null) {
-					selectedAttribute.setText("");
-				}
-			}
-		});
-		comboAttributeName6.setSelectedIndex(-1);
-		comboAttributeName6.setBounds(126, 6, 182, 27);
-		panel_5.add(comboAttributeName6);
-		
-		lblAttributeValues6 = new JLabel("Attribute 6 value(s)");
-		lblAttributeValues6.setBounds(0, 41, 130, 16);
-		panel_5.add(lblAttributeValues6);
-		
-		txtAttributeValue6 = new JTextField();
-		txtAttributeValue6.setColumns(10);
-		txtAttributeValue6.setBounds(126, 36, 303, 26);
-		panel_5.add(txtAttributeValue6);
-		
-		panel_6 = new JPanel();
-		panel_6.setLayout(null);
-		panel_6.setBounds(6, 368, 429, 60);
-		attributePanel.add(panel_6);
-		panel_6.setVisible(false);
-		
-		lblAttributeName7 = new JLabel("Attribute 7 name");
-		lblAttributeName7.setBounds(0, 10, 114, 16);
-		panel_6.add(lblAttributeName7);
-		
-		comboAttributeName7 = new JComboBox(attributeNames.toArray());
-		comboAttributeName7.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (comboAttributeName7.getSelectedIndex() >-1)
-					AttributeList.setListData(productMgr.getAttributeValuesbyName(comboAttributeName7.getSelectedItem().toString()).toArray());
-				selectedAttribute = txtAttributeValue7;
-				if (selectedAttribute!=null) {
-					selectedAttribute.setText("");
-				}
-			}
-		});
-		comboAttributeName7.setSelectedIndex(-1);
-		comboAttributeName7.setBounds(126, 6, 182, 27);
-		panel_6.add(comboAttributeName7);
-		
-		lblAttributeValues7 = new JLabel("Attribute 7 value(s)");
-		lblAttributeValues7.setBounds(0, 41, 130, 16);
-		panel_6.add(lblAttributeValues7);
-		
-		txtAttributeValue7 = new JTextField();
-		txtAttributeValue7.setColumns(10);
-		txtAttributeValue7.setBounds(126, 36, 303, 26);
-		panel_6.add(txtAttributeValue7);
-		
-		panel_7 = new JPanel();
-		panel_7.setLayout(null);
-		panel_7.setBounds(6, 427, 429, 60);
-		attributePanel.add(panel_7);
-		panel_7.setVisible(false);
-		
-		lblAttributeName8 = new JLabel("Attribute 8 name");
-		lblAttributeName8.setBounds(0, 10, 114, 16); 
-		panel_7.add(lblAttributeName8);
-		
-		comboAttributeName8 = new JComboBox(attributeNames.toArray());
-		comboAttributeName8.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (comboAttributeName8.getSelectedIndex() >-1)
-					AttributeList.setListData(productMgr.getAttributeValuesbyName(comboAttributeName8.getSelectedItem().toString()).toArray());
-				selectedAttribute = txtAttributeValue8;
-				if (selectedAttribute!=null) {
-					selectedAttribute.setText("");
-				}
-			}
-		});
-		comboAttributeName8.setSelectedIndex(-1);
-		comboAttributeName8.setBounds(126, 6, 182, 27);
-		panel_7.add(comboAttributeName8);
-		
-		lblAttributeValues8 = new JLabel("Attribute 8 value(s)");
-		lblAttributeValues8.setBounds(0, 41, 130, 16);
-		panel_7.add(lblAttributeValues8);
-		
-		txtAttributeValue8 = new JTextField();
-		txtAttributeValue8.setColumns(10);
-		txtAttributeValue8.setBounds(126, 36, 303, 26);
-		panel_7.add(txtAttributeValue8);
-		
-		panel_8 = new JPanel();
-		panel_8.setLayout(null);
-		panel_8.setBounds(6, 486, 429, 60);
-		attributePanel.add(panel_8);
-		panel_8.setVisible(false);
-		
-		lblAttributeName9 = new JLabel("Attribute 9 name");
-		lblAttributeName9.setBounds(0, 10, 114, 16);
-		panel_8.add(lblAttributeName9);
-		
-		comboAttributeName9 = new JComboBox(attributeNames.toArray());
-		comboAttributeName9.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (comboAttributeName9.getSelectedIndex() >-1)
-					AttributeList.setListData(productMgr.getAttributeValuesbyName(comboAttributeName9.getSelectedItem().toString()).toArray());
-				selectedAttribute = txtAttributeValue9;
-				if (selectedAttribute!=null) {
-					selectedAttribute.setText("");
-				}
-			}
-		});
-		comboAttributeName9.setSelectedIndex(-1);
-		comboAttributeName9.setBounds(126, 6, 182, 27);
-		panel_8.add(comboAttributeName9);
-		
-		lblAttributeValues9 = new JLabel("Attribute 9 value(s)");
-		lblAttributeValues9.setBounds(0, 41, 130, 16);
-		panel_8.add(lblAttributeValues9);
-		
-		txtAttributeValue9 = new JTextField();
-		txtAttributeValue9.setColumns(10);
-		txtAttributeValue9.setBounds(126, 36, 303, 26);
-		panel_8.add(txtAttributeValue9);
-		
-		panel_9 = new JPanel();
-		panel_9.setLayout(null);
-		panel_9.setBounds(6, 545, 429, 60);
-		attributePanel.add(panel_9);
-		panel_9.setVisible(false);
-		
-		lblAttributeName10 = new JLabel("Attribute 10 name");
-		lblAttributeName10.setBounds(0, 10, 114, 16);
-		panel_9.add(lblAttributeName10);
-		
-		comboAttributeName10 = new JComboBox(attributeNames.toArray());
-		comboAttributeName10.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (comboAttributeName10.getSelectedIndex() >-1)
-					AttributeList.setListData(productMgr.getAttributeValuesbyName(comboAttributeName10.getSelectedItem().toString()).toArray());
-				selectedAttribute = txtAttributeValue10;
-				if (selectedAttribute!=null) {
-					selectedAttribute.setText("");
-				}
-			}
-		});
-		comboAttributeName10.setSelectedIndex(-1);
-		comboAttributeName10.setBounds(126, 6, 182, 27);
-		panel_9.add(comboAttributeName10);
-		
-		lblAttributeValues = new JLabel("Attribute 10 value(s)");
-		lblAttributeValues.setBounds(0, 41, 130, 16);
-		panel_9.add(lblAttributeValues);
-		
-		txtAttributeValue10 = new JTextField();
-		txtAttributeValue10.setColumns(10);
-		txtAttributeValue10.setBounds(126, 36, 303, 26);
-		panel_9.add(txtAttributeValue10);
-		
-		panel_10 = new JPanel();
-		panel_10.setLayout(null);
-		panel_10.setBounds(6, 604, 429, 60);
-		attributePanel.add(panel_10);
-		panel_10.setVisible(false);
-		
-		lblAttributeName11 = new JLabel("Attribute 11 name");
-		lblAttributeName11.setBounds(0, 10, 114, 16);
-		panel_10.add(lblAttributeName11);
-		
-		comboAttributeName11 = new JComboBox(attributeNames.toArray());
-		comboAttributeName11.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (comboAttributeName11.getSelectedIndex() >-1)
-					AttributeList.setListData(productMgr.getAttributeValuesbyName(comboAttributeName11.getSelectedItem().toString()).toArray());
-				selectedAttribute = txtAttributeValue11;
-				if (selectedAttribute!=null) {
-					selectedAttribute.setText("");
-				}
-			}
-		});
-		comboAttributeName11.setSelectedIndex(-1);
-		comboAttributeName11.setBounds(126, 6, 182, 27);
-		panel_10.add(comboAttributeName11);
-		
-		lblAttributeValues11 = new JLabel("Attribute 11 value(s)");
-		lblAttributeValues11.setBounds(0, 41, 130, 16);
-		panel_10.add(lblAttributeValues11);
-		
-		txtAttributeValue11 = new JTextField();
-		txtAttributeValue11.setColumns(10);
-		txtAttributeValue11.setBounds(126, 36, 303, 26);
-		panel_10.add(txtAttributeValue11);
-
-		selectedAttribute = txtAttributeValue1;
-		
-		// add all the attribute names and value controls object into one list starting from Attribute 2 as attribute 1 is a required field for Brand.
-		attributeCtrls.add(new AttributeControlSet(panel_1,comboAttributeName2, txtAttributeValue2));
-		attributeCtrls.add(new AttributeControlSet(panel_2,comboAttributeName3, txtAttributeValue3));
-		attributeCtrls.add(new AttributeControlSet(panel_3,comboAttributeName4, txtAttributeValue4));
-		attributeCtrls.add(new AttributeControlSet(panel_4,comboAttributeName5, txtAttributeValue5));
-		attributeCtrls.add(new AttributeControlSet(panel_5,comboAttributeName6, txtAttributeValue6));
-		attributeCtrls.add(new AttributeControlSet(panel_6,comboAttributeName7, txtAttributeValue7));
-		attributeCtrls.add(new AttributeControlSet(panel_7,comboAttributeName8, txtAttributeValue8));
-		attributeCtrls.add(new AttributeControlSet(panel_8,comboAttributeName9, txtAttributeValue9));
-		attributeCtrls.add(new AttributeControlSet(panel_9,comboAttributeName10, txtAttributeValue10));
-		attributeCtrls.add(new AttributeControlSet(panel_10,comboAttributeName11, txtAttributeValue11));
 		
 		checkbxPublished = new JCheckBox("Published");
 		checkbxPublished.setBounds(618, 203, 102, 23);
@@ -981,15 +483,13 @@ public class ProductmetaMainGui {
 				if (!txtHeight.getText().trim().isEmpty())
 					product.setHeight(Double.parseDouble(txtHeight.getText()));
 				
-				Hashtable<String, String> attributes = new Hashtable<String, String>();
-				attributes.put(comboAttributeName1.getSelectedItem().toString(), txtAttributeValue1.getText());
-				for (AttributeControlSet ac : attributeCtrls)
+				LinkedHashMap<String, String> attributes = new LinkedHashMap<String, String>();
+				//attributes.put(comboAttributeName1.getSelectedItem().toString(), txtAttributeValue1.getText());
+				for (AttributeControlSet ac : attributeControlSets)
 				{
-					if(ac.getPanel().isVisible()&& ac.getAttributeNameBox().getSelectedIndex()>-1 && !ac.getAttributeValueField().getText().trim().isEmpty()) 
+					if(ac.getAttributeNameBox().getSelectedIndex()>-1 && !ac.getAttributeValueField().getText().trim().isEmpty()) 
 						attributes.put(ac.getAttributeNameBox().getSelectedItem().toString(), ac.getAttributeValueField().getText());
-					else {
-						break;
-					}
+
 				}
 				product.setAttributes(attributes);
 				
@@ -1006,7 +506,7 @@ public class ProductmetaMainGui {
 		label.setBounds(1191, 227, 203, 16);
 		frame.getContentPane().add(label);
 		
-		AttributeList = new JList();
+		
 		
 		AttributeList.addMouseListener(new MouseAdapter() {
 		    public void mouseClicked(MouseEvent evt) {

@@ -1,8 +1,6 @@
 package uk.co.awesomepens.gui;
 
 import java.awt.EventQueue;
-import java.awt.GridBagConstraints;
-
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 
@@ -17,7 +15,6 @@ import javax.swing.JFileChooser;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -34,8 +31,6 @@ import javax.swing.border.TitledBorder;
 
 import javax.swing.JComboBox;
 import javax.swing.JList;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
 import javax.swing.JCheckBox;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -43,7 +38,6 @@ import javax.swing.SwingConstants;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
-import java.awt.Component;
 import java.awt.Dimension;
 import javax.swing.ScrollPaneConstants;
 
@@ -87,13 +81,11 @@ public class ProductmetaMainGui {
 	private JLabel lblHeightcm;
 	private JTextField txtHeight;
 	private JButton btnMetaCsv;
-	private JButton btnLessAttribute;
 	private JCheckBox checkbxPublished;
 	private JTextArea textAreaShortDescription;
 	private JTextArea textAreaDescription;
 	private JList AttributeList;
 	private JLabel lblMsg;
-	private JMenuItem mntmBatchProcess_1;
 	private JMenuItem mntmBatchProcess;
 	private JLabel label;
 	private JButton button;

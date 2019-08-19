@@ -1,6 +1,5 @@
 package uk.co.awesomepens.model;
 
-import java.util.Hashtable;
 import java.util.LinkedHashMap;
 
 public class Product {

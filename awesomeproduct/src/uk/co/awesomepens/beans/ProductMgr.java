@@ -2,28 +2,20 @@ package uk.co.awesomepens.beans;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.TimeZone;
 import java.util.regex.Pattern;
 
 import javax.swing.JTextArea;
@@ -43,7 +35,6 @@ public class ProductMgr {
 	private List<String> header;
 	private JTextArea outputArea;
 	public final String NEWLINE = System.lineSeparator();
-	private InputStream inputStream;
 
 	public List<ProductAttribute> getAttributes() {
 		return attributes;
@@ -326,12 +317,8 @@ public class ProductMgr {
 	
 	private void populateImagePath(String[] data) {
 		String str = data[14];
-		Date date = new Date(); // your date
-		// Choose time zone in which you want to interpret your Date
-		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
-		cal.setTime(date);
-		int year = cal.get(Calendar.YEAR);
-		int month = cal.get(Calendar.MONTH);
+		int year = Calendar.getInstance().get(Calendar.YEAR);
+		int month = Calendar.getInstance().get(Calendar.MONTH);
 		String urlPrefix = "https://awesomepens.co.uk/wp-content/uploads/" + year + "/" + String.format("%02d", month + 1) + "/";
 		
 		str = urlPrefix + str;

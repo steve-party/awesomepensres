@@ -35,6 +35,8 @@ public class ProductMgr {
 	private List<String> header;
 	private JTextArea outputArea;
 	public final String NEWLINE = System.lineSeparator();
+	public final String ATTRIBUTE_VISABLE = "1";
+	public final String ATTRIBUTE_GOLABLE = "1";
 
 	public List<ProductAttribute> getAttributes() {
 		return attributes;
@@ -80,6 +82,8 @@ public class ProductMgr {
 		for(int i = 0; i<Product.MAX_ATTRIBUTE_AMOUNT; i++) {
 			header.add("Attribute " + Integer.toString(i+1) + " name");
 			header.add("Attribute " + Integer.toString(i+1) + " value(s)");
+			header.add("Attribute " + Integer.toString(i+1) + " visible");
+			header.add("Attribute " + Integer.toString(i+1) + " global");
 		}
 		
 		return header;
@@ -108,6 +112,9 @@ public class ProductMgr {
 		for(int i = 0; i<product.getAttributes().size(); i++) {
 			header.add("Attribute " + Integer.toString(i+1) + " name");
 			header.add("Attribute " + Integer.toString(i+1) + " value(s)");
+			header.add("Attribute " + Integer.toString(i+1) + " visible");
+			header.add("Attribute " + Integer.toString(i+1) + " global");
+			
 		}
 		
 		return header;
@@ -144,6 +151,8 @@ public class ProductMgr {
 			Entry<String, String> entry = it.next();
 			data.add(entry.getKey());
 			data.add(entry.getValue());
+			data.add(ATTRIBUTE_VISABLE);
+			data.add(ATTRIBUTE_GOLABLE);
 		}
 		
 		CsvTools.writeSingleLine(csvFilePath, header.toArray(new String[0]), data.toArray(new String[0]));
@@ -206,7 +215,7 @@ public class ProductMgr {
 //				attributes.put(record[16], record[17]);
 				
 				if (record.length>16) {
-					for (int i = 16; i < record.length; i+=2) {
+					for (int i = 16; i < record.length; i+=4) {
 						attributes.put(record[i], record[i+1]);
 					}
 				}
@@ -315,8 +324,10 @@ public class ProductMgr {
 		return str.replaceAll("Catalog"+Pattern.quote(File.separator), "").replaceAll(Pattern.quote(File.separator), " > ").replaceAll("&", "&amp;");	
 	}
 	
-	private void populateImagePath(String[] data) {
+	private void populateImagePath(String[] data, String extraImage) {
 		String str = data[14];
+		if(!extraImage.isEmpty())
+			str	+= ", " + extraImage;
 		int year = Calendar.getInstance().get(Calendar.YEAR);
 		int month = Calendar.getInstance().get(Calendar.MONTH);
 		String urlPrefix = "https://awesomepens.co.uk/wp-content/uploads/" + year + "/" + String.format("%02d", month + 1) + "/";
@@ -326,7 +337,7 @@ public class ProductMgr {
 		data[14] = str;
 	}
 	
-	public void BatchProcessProducts(List<File> productFolders, String outputFolderPath) {
+	public void BatchProcessProducts(List<File> productFolders, String outputFolderPath, String extraInfo) {
 		
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 		String timeStamp = dateFormat.format(new Date());
@@ -346,6 +357,8 @@ public class ProductMgr {
 	        CSVWriter outputWriter = new CSVWriter(outputfile);
 	        
 	        outputWriter.writeNext(header.toArray(new String[0]));
+
+	        
 	        int processedNo = 0;
 	        for(File dir : productFolders)
 	        {
@@ -353,7 +366,7 @@ public class ProductMgr {
 	        	
 	        	if (item.exists()) {
 		        	String[] data = CsvTools.readFirstRecord(item.getPath());
-		        	populateImagePath(data);
+		        	populateImagePath(data, extraInfo);
 		        	outputWriter.writeNext(data);
 		        	
 		        	
@@ -392,8 +405,6 @@ public class ProductMgr {
 	        	else {
 	        		outputLine("meta.csv not found in " + dir.getPath());
 	        	}
-	        	
-
 	        	
 	        }
 	        

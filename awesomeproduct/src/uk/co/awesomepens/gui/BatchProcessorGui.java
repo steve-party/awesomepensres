@@ -26,6 +26,9 @@ import java.util.prefs.Preferences;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import javax.swing.JScrollBar;
+import javax.swing.JCheckBox;
+import javax.swing.ScrollPaneConstants;
 
 public class BatchProcessorGui extends JFrame {
 
@@ -149,6 +152,16 @@ public class BatchProcessorGui extends JFrame {
 		scrollPane_1.setBounds(540, 457, 595, 315);
 		contentPane.add(scrollPane_1);
 		
+		JTextArea txtAreaExtraImages = new JTextArea();
+		JScrollPane scrollPane_2 = new JScrollPane(txtAreaExtraImages);
+		scrollPane_2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane_2.setBounds(540, 133, 595, 113);
+		contentPane.add(scrollPane_2);
+		
+		JCheckBox chckbxAppendToImage = new JCheckBox("Append to Image");
+		chckbxAppendToImage.setBounds(540, 249, 154, 23);
+		contentPane.add(chckbxAppendToImage);
+		
 		JButton btnNewButton_1 = new JButton("Process");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -158,11 +171,16 @@ public class BatchProcessorGui extends JFrame {
 				else if(textField.getText().isEmpty()) {
 					MessageBox("Please choose an output folder.");
 				}
-				
-				productMgr.BatchProcessProducts(productFolders, textField.getText());	
+				String extraInfo = "";
+				if(chckbxAppendToImage.isSelected()){
+					if (!(txtAreaExtraImages.getText().trim().isEmpty()))
+						extraInfo = txtAreaExtraImages.getText();
+				}
+
+				productMgr.BatchProcessProducts(productFolders, textField.getText(), extraInfo);	
 			}
 		});
-		btnNewButton_1.setBounds(1018, 374, 117, 75);
+		btnNewButton_1.setBounds(1000, 778, 135, 41);
 		contentPane.add(btnNewButton_1);
 		
 		JButton btnRemoveAll = new JButton("Remove All");
@@ -262,6 +280,8 @@ public class BatchProcessorGui extends JFrame {
 		});
 		btnRemoveHighlighted.setBounds(339, 784, 179, 29);
 		contentPane.add(btnRemoveHighlighted);
+		
+
 	}
 	
 	private void renderList()

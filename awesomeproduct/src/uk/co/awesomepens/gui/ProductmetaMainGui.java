@@ -251,7 +251,7 @@ public class ProductmetaMainGui {
 		frame.getContentPane().add(lblSku);
 		
 		txtSku = new JTextField();
-		txtSku.setBounds(84, 89, 146, 26);
+		txtSku.setBounds(84, 89, 222, 26);
 		frame.getContentPane().add(txtSku);
 		txtSku.setColumns(10);
 		
@@ -269,6 +269,8 @@ public class ProductmetaMainGui {
 		frame.getContentPane().add(lblShortDescription);
 		
 		textAreaShortDescription = new JTextArea();
+		textAreaShortDescription.setWrapStyleWord(true);
+		textAreaShortDescription.setLineWrap(true);
 		JScrollPane spaneShortDescription = new JScrollPane(textAreaShortDescription);
 		spaneShortDescription.setBounds(6, 265, 715, 46);
 		frame.getContentPane().add(spaneShortDescription);
@@ -278,34 +280,36 @@ public class ProductmetaMainGui {
 		frame.getContentPane().add(lblDescription);
 		
 		textAreaDescription = new JTextArea();
+		textAreaDescription.setWrapStyleWord(true);
+		textAreaDescription.setLineWrap(true);
 		JScrollPane spaneDescription = new JScrollPane(textAreaDescription);
 		spaneDescription.setBounds(6, 344, 715, 551);
 		frame.getContentPane().add(spaneDescription);
 		
 		JLabel lblStock = new JLabel("Stock");
-		lblStock.setBounds(242, 94, 42, 16);
+		lblStock.setBounds(318, 94, 42, 16);
 		frame.getContentPane().add(lblStock);
 		
 		txtStock = new JTextField();
-		txtStock.setBounds(292, 89, 77, 26);
+		txtStock.setBounds(361, 89, 61, 26);
 		frame.getContentPane().add(txtStock);
 		txtStock.setColumns(10);
 		
 		lblRegularPrice = new JLabel("Regular price");
-		lblRegularPrice.setBounds(381, 94, 88, 16);
+		lblRegularPrice.setBounds(434, 94, 88, 16);
 		frame.getContentPane().add(lblRegularPrice);
 		
 		txtRegularPrice = new JTextField();
-		txtRegularPrice.setBounds(482, 89, 79, 26);
+		txtRegularPrice.setBounds(524, 89, 61, 26);
 		frame.getContentPane().add(txtRegularPrice);
 		txtRegularPrice.setColumns(10);
 		
 		lblSalePrice = new JLabel("Sale price");
-		lblSalePrice.setBounds(573, 94, 61, 16);
+		lblSalePrice.setBounds(597, 94, 61, 16);
 		frame.getContentPane().add(lblSalePrice);
 		
 		txtSalePrice = new JTextField();
-		txtSalePrice.setBounds(646, 89, 75, 26);
+		txtSalePrice.setBounds(660, 89, 61, 26);
 		frame.getContentPane().add(txtSalePrice);
 		txtSalePrice.setColumns(10);
 		

@@ -153,6 +153,7 @@ public class BatchProcessorGui extends JFrame {
 		contentPane.add(scrollPane_1);
 		
 		JTextArea txtAreaExtraImages = new JTextArea();
+		txtAreaExtraImages.setLineWrap(true);
 		JScrollPane scrollPane_2 = new JScrollPane(txtAreaExtraImages);
 		scrollPane_2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane_2.setBounds(540, 133, 595, 113);

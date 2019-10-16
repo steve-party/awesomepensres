@@ -169,7 +169,7 @@ public class ProductmetaMainGui {
 					txtSku.setText("");
 					txtName.setText("");
 					checkbxPublished.setSelected(false);
-					textAreaShortDescription.setText("");
+					textAreaShortDescription.setText("Enjoy Free Delivery & Free Return when you order £25 or more! Check our Delivery Information for more detail.");
 					textAreaDescription.setText("");
 					txtStock.setText("");
 					txtWeight.setText("");

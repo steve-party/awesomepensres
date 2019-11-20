@@ -163,6 +163,10 @@ public class BatchProcessorGui extends JFrame {
 		chckbxAppendToImage.setBounds(540, 249, 154, 23);
 		contentPane.add(chckbxAppendToImage);
 		
+		JCheckBox chckbxCreateGroupProduct = new JCheckBox("Create Group Product");
+		chckbxCreateGroupProduct.setBounds(706, 249, 179, 23);
+		contentPane.add(chckbxCreateGroupProduct);
+		
 		JButton btnNewButton_1 = new JButton("Process");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -178,7 +182,7 @@ public class BatchProcessorGui extends JFrame {
 						extraInfo = txtAreaExtraImages.getText();
 				}
 
-				productMgr.BatchProcessProducts(productFolders, textField.getText(), extraInfo);	
+				productMgr.BatchProcessProducts(productFolders, textField.getText(), extraInfo, chckbxCreateGroupProduct.isSelected());	
 			}
 		});
 		btnNewButton_1.setBounds(1000, 778, 135, 41);
@@ -281,6 +285,8 @@ public class BatchProcessorGui extends JFrame {
 		});
 		btnRemoveHighlighted.setBounds(339, 784, 179, 29);
 		contentPane.add(btnRemoveHighlighted);
+		
+
 		
 
 	}

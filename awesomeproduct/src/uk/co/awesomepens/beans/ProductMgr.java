@@ -58,7 +58,7 @@ public class ProductMgr {
 
 		
 	}
-	
+	// for batch processing
 	private List<String> createCsvHeader(){
 		header = new ArrayList<String>();
 		header.add("Sku");
@@ -77,7 +77,9 @@ public class ProductMgr {
 		header.add("Tags");
 		header.add("Images");
 		header.add("Meta: _wpm_gtin_code");
-		
+		//add Type and Grouped product field for grouped product 
+		header.add("Type");
+		header.add("Grouped products");
 		
 		for(int i = 0; i<Product.MAX_ATTRIBUTE_AMOUNT; i++) {
 			header.add("Attribute " + Integer.toString(i+1) + " name");
@@ -89,6 +91,7 @@ public class ProductMgr {
 		return header;
 	}
 	
+	// for individual product
 	private List<String> createCsvHeader(Product product){
 		header = new ArrayList<String>();
 		header.add("Sku");
@@ -107,7 +110,7 @@ public class ProductMgr {
 		header.add("Tags");
 		header.add("Images");
 		header.add("Meta: _wpm_gtin_code");
-		
+			
 		
 		for(int i = 0; i<product.getAttributes().size(); i++) {
 			header.add("Attribute " + Integer.toString(i+1) + " name");
@@ -337,7 +340,7 @@ public class ProductMgr {
 		data[14] = str;
 	}
 	
-	public void BatchProcessProducts(List<File> productFolders, String outputFolderPath, String extraInfo) {
+	public void BatchProcessProducts(List<File> productFolders, String outputFolderPath, String extraInfo, boolean groupProductOrNot) {
 		
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 		String timeStamp = dateFormat.format(new Date());
@@ -358,7 +361,10 @@ public class ProductMgr {
 	        
 	        outputWriter.writeNext(header.toArray(new String[0]));
 
-	        
+	        String[] group = new String[60];
+	        String groupedSkus = "";
+	        String grpImageUrl = "";
+	        String grpExtaImage = "";
 	        int processedNo = 0;
 	        for(File dir : productFolders)
 	        {
@@ -366,8 +372,38 @@ public class ProductMgr {
 	        	
 	        	if (item.exists()) {
 		        	String[] data = CsvTools.readFirstRecord(item.getPath());
-		        	populateImagePath(data, extraInfo);
-		        	outputWriter.writeNext(data);
+		        	//add Type and Grouped product field as empty at array index 16 and 17
+		        	String[] newData = new String[data.length+2];
+		        	for(int i = 0; i<16; i++) {
+		        		newData[i] = data[i];
+		        	}
+		        	newData[16] = "";
+		        	newData[17] = "";
+		        	for(int j = 16; j<data.length; j++) {
+		        		newData[j+2] = data[j];
+		        	}
+
+		        		
+		        	populateImagePath(newData, extraInfo);
+		        	outputWriter.writeNext(newData);
+		        	//populate group image url
+		        	String[] url = newData[14].split(", ");
+		        	if(processedNo==0) {
+		        		
+		        		for(int k = 0; k<group.length; k++) {
+		        			group[k] = newData[k];
+		        		}
+		        		
+		        		grpImageUrl = url[0] + ", " + url[1];
+		        		
+		        		for (int l = 2; l<url.length; l++) {
+		        			grpExtaImage += ", " + url[l];
+		        		}
+		        		groupedSkus = newData[0];
+		        	} else {
+		        		grpImageUrl += ", " + url[1];
+		        		groupedSkus += ", " + newData[0];
+		        	}
 		        	
 		        	
 		        	if(hasQualifiedImages(dir))
@@ -410,8 +446,28 @@ public class ProductMgr {
 	        
 	        outputLine("===========");
 	        outputLine( processedNo + " of " + productFolders.size() + " are processed!" );
+	        
+	        //add group product line to the end of the csv
+	        group[0] = "";
+	        group[1] = "";
+	        group[11] = "";
+	        group[14] = grpImageUrl + grpExtaImage;
+	        group[15] = "";
+	        group[16] = "grouped";
+	        group[17] = groupedSkus;
+	        
+	        for (int j = 18; j<group.length; j++) {
+	        	if(group[j].compareTo("Brand") != 0)
+	        		group[j] = "";
+	        	else
+	        		break;
+	        }
+	        if(groupProductOrNot){
+	        	outputWriter.writeNext(group);
+	        	outputLine("Grouped product created!" );
+	        }
 	        outputLine("Output file: " + outputFilePath);
-	  
+	        
 	        // closing writer connection 
 	        outputWriter.close(); 
 	    } 

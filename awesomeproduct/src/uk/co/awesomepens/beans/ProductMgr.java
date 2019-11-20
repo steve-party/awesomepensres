@@ -361,7 +361,7 @@ public class ProductMgr {
 	        
 	        outputWriter.writeNext(header.toArray(new String[0]));
 
-	        String[] group = new String[60];
+	        String[] group = new String[180];
 	        String groupedSkus = "";
 	        String grpImageUrl = "";
 	        String grpExtaImage = "";
@@ -373,14 +373,14 @@ public class ProductMgr {
 	        	if (item.exists()) {
 		        	String[] data = CsvTools.readFirstRecord(item.getPath());
 		        	//add Type and Grouped product field as empty at array index 16 and 17
-		        	String[] newData = new String[data.length+2];
+		        	String[] newData = new String[180];
 		        	for(int i = 0; i<16; i++) {
 		        		newData[i] = data[i];
 		        	}
 		        	newData[16] = "";
 		        	newData[17] = "";
-		        	for(int j = 16; j<data.length; j++) {
-		        		newData[j+2] = data[j];
+		        	for(int i = 16; i<data.length; i++) {
+		        		newData[i+2] = data[i];
 		        	}
 
 		        		
@@ -390,14 +390,14 @@ public class ProductMgr {
 		        	String[] url = newData[14].split(", ");
 		        	if(processedNo==0) {
 		        		
-		        		for(int k = 0; k<group.length; k++) {
-		        			group[k] = newData[k];
+		        		for(int i = 0; i<group.length; i++) {
+		        			group[i] = newData[i];
 		        		}
 		        		
 		        		grpImageUrl = url[0] + ", " + url[1];
 		        		
-		        		for (int l = 2; l<url.length; l++) {
-		        			grpExtaImage += ", " + url[l];
+		        		for (int i = 2; i<url.length; i++) {
+		        			grpExtaImage += ", " + url[i];
 		        		}
 		        		groupedSkus = newData[0];
 		        	} else {
@@ -456,9 +456,9 @@ public class ProductMgr {
 	        group[16] = "grouped";
 	        group[17] = groupedSkus;
 	        
-	        for (int j = 18; j<group.length; j++) {
-	        	if(group[j].compareTo("Brand") != 0)
-	        		group[j] = "";
+	        for (int i = 18; i<group.length; i++) {
+	        	if(group[i]!=null && group[i].compareTo("Brand") != 0)
+	        		group[i] = "";
 	        	else
 	        		break;
 	        }
